@@ -1,14 +1,13 @@
 # Campus Air Quality Alert System
 
-A full-stack ML web app that predicts campus **AQI (Air Quality Index)**, fetches live campus weather/air data by latitude-longitude, and generates health alerts (no IoT devices required).
+A full-stack ML web app that predicts campus **AQI (Air Quality Index)** and generates health alerts using historical/synthetic environmental data (no IoT devices required).
 
 ## Features
 
-- FastAPI backend with endpoints for health, prediction, analysis, history, sample generation, and real-time campus fetch
+- FastAPI backend with endpoints for health, prediction, analysis, history, and sample generation
 - ML pipeline with data cleaning, train/test split, Random Forest vs Linear Regression comparison, and model persistence
 - MongoDB persistence (with in-memory fallback when MongoDB is unavailable)
 - React + Vite dashboard with Tailwind dark UI, Framer Motion animations, and Recharts visualizations
-- Real-time Open-Meteo weather + air quality ingestion (1-second polling from frontend)
 - Alert system with severity levels and animated warning UI
 - Pages: Home, Prediction Dashboard, AQI Analytics, Alerts
 
@@ -20,7 +19,6 @@ backend/
   routes/
     predict.py
     analyze.py
-    realtime.py
   ml/
     train_model.py
     model.pkl (generated)
@@ -30,7 +28,6 @@ backend/
     prediction_schema.py
   utils/
     aqi_calculator.py
-  services_weather.py
   requirements.txt
 
 frontend/
