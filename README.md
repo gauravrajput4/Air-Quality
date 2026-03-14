@@ -57,6 +57,14 @@ npm install
 npm run dev
 ```
 
+Optional environment variables for campus coordinates:
+
+```bash
+VITE_CAMPUS_LAT=12.9716
+VITE_CAMPUS_LON=77.5946
+VITE_API_URL=http://localhost:8000
+```
+
 Frontend URL: `http://localhost:5173`
 
 ## Core API Endpoints
@@ -66,6 +74,7 @@ Frontend URL: `http://localhost:5173`
 - `POST /analyze`
 - `GET /history`
 - `POST /generate-sample`
+- `GET /realtime?latitude=<lat>&longitude=<lon>`
 
 ## AQI Categories
 
@@ -79,4 +88,5 @@ Frontend URL: `http://localhost:5173`
 ## Notes
 
 - If `backend/data/air_quality_data.csv` is missing, synthetic realistic data is generated automatically.
-- MongoDB connection is optional for local demo; predictions will still work with temporary in-memory storage.
+- MongoDB connection is optional for local demo; predictions still work with temporary in-memory storage.
+- Realtime API is fetched from Open-Meteo weather + air-quality APIs and transformed into model features.

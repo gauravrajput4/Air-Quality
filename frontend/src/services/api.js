@@ -7,5 +7,11 @@ const api = axios.create({
 export const predictAQI = (payload) => api.post('/predict', payload).then((res) => res.data);
 export const fetchHistory = () => api.get('/history').then((res) => res.data.records || []);
 export const getSample = () => api.post('/generate-sample').then((res) => res.data.sample);
+export const fetchRealtimeAQI = ({ latitude, longitude }) =>
+  api
+    .get('/realtime', {
+      params: { latitude, longitude },
+    })
+    .then((res) => res.data);
 
 export default api;
