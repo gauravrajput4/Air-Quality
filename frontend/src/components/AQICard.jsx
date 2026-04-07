@@ -1,14 +1,29 @@
 import { motion } from 'framer-motion';
 
-export default function AQICard({ title, value, subtitle }) {
+const toneStyles = {
+  sky: 'from-blue-50 via-white to-white',
+  amber: 'from-amber-50 via-white to-white',
+  rose: 'from-rose-50 via-white to-white',
+  emerald: 'from-emerald-50 via-white to-white',
+};
+
+export default function AQICard({ title, value, subtitle, tone = 'sky', detail }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.03 }}
-      className="rounded-xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur"
+      whileHover={{ y: -4 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+      className={`shimmer glass-panel relative overflow-hidden bg-gradient-to-br p-5 ${toneStyles[tone] || toneStyles.sky}`}
     >
-      <h3 className="text-sm text-slate-300">{title}</h3>
-      <p className="mt-2 text-3xl font-bold text-emerald-300">{value}</p>
-      <p className="mt-1 text-xs text-slate-400">{subtitle}</p>
+      <div className="relative z-10">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm text-slate-600">{title}</p>
+            <p className="mt-3 font-display text-4xl font-semibold tracking-tight text-slate-900">{value}</p>
+          </div>
+          {detail ? <span className="metric-chip">{detail}</span> : null}
+        </div>
+        <p className="mt-3 text-sm text-slate-600">{subtitle}</p>
+      </div>
     </motion.div>
   );
 }

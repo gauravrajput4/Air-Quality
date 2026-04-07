@@ -1,44 +1,31 @@
 from __future__ import annotations
 
 from datetime import datetime
-from pathlib import Path
-from typing import Any, Dict
+from typing import Dict
 
-import joblib
-import pandas as pd
 from fastapi import APIRouter, HTTPException
 
 from database.mongodb import PredictionRepository
-from ml.train_model import FEATURE_COLUMNS, MODEL_PATH, run_training
 from schemas.prediction_schema import EnvironmentalData
-from utils.aqi_calculator import categorize_aqi
+from services.ml_service import predict_aqi as predict_aqi_score
+from services.notification_service import build_alert
 
 router = APIRouter()
 repository = PredictionRepository()
 
 
-def _load_model() -> Dict[str, Any]:
-    if not Path(MODEL_PATH).exists():
-        run_training()
-    return joblib.load(MODEL_PATH)
-
-
 @router.post("/predict")
 def predict_aqi(payload: EnvironmentalData) -> Dict[str, Any]:
     try:
-        model_bundle = _load_model()
-        model = model_bundle["model"]
-        features = model_bundle.get("features", FEATURE_COLUMNS)
-        df = pd.DataFrame([payload.model_dump()])[features]
-        predicted_aqi = float(model.predict(df)[0])
-
-        category, warning, level = categorize_aqi(predicted_aqi)
+        predicted_aqi = predict_aqi_score(payload.model_dump())
+        alert = build_alert(predicted_aqi)
         record = {
             **payload.model_dump(),
             "predicted_aqi": round(predicted_aqi, 2),
-            "pollution_category": category,
-            "health_warning": warning,
-            "alert_level": level,
+            "pollution_category": alert["category"],
+            "health_warning": alert["health_warning"],
+            "alert_level": alert["alert_level"],
+            "alert_status": alert["alert_status"],
             "created_at": datetime.utcnow(),
         }
         repository.add_prediction(record)
